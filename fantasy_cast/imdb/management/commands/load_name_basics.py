@@ -4,12 +4,13 @@ import os
 from django.core.management.base import BaseCommand
 from django.conf import settings
 from django.db import connections
+from django.db.utils import DataError
 
 from imdb.models import Profession, Person, MovieTitle
 from imdb.management.commands.converter_utils import convert_int
 
 
-logger = logging.getLogger()
+logger = logging.getLogger('django')
 
 
 def reset_tables():
@@ -51,25 +52,31 @@ class Command(BaseCommand):
 
             for line in list(f):
 
-                entry = line.rstrip('\n').split('\t')
+                try:
 
-                person = Person.objects.create(
-                    nconst=entry[0],
-                    primary_name=entry[1],
-                    birth_year=convert_int(entry[2]),
-                    death_year=convert_int(entry[3])
-                )
+                    entry = line.rstrip('\n').split('\t')
 
-                for p in entry[4].replace('\\N', '').split(','):
-                    profession, _ = Profession.objects.update_or_create(name=p)
-                    person.primary_profession.add(profession)
+                    person = Person.objects.create(
+                        nconst=entry[0],
+                        primary_name=entry[1],
+                        birth_year=convert_int(entry[2]),
+                        death_year=convert_int(entry[3])
+                    )
 
-                for t in entry[5].replace('\\N', '').split(','):
-                    try:
-                        movie_title = MovieTitle.objects.get(tconst=t)
-                        person.known_for_titles.add(movie_title)
-                    except MovieTitle.DoesNotExist:
-                        pass
+                    for p in entry[4].replace('\\N', '').split(','):
+                        profession, _ = Profession.objects.update_or_create(
+                            name=p)
+                        person.primary_profession.add(profession)
+
+                    for t in entry[5].replace('\\N', '').split(','):
+                        try:
+                            movie_title = MovieTitle.objects.get(tconst=t)
+                            person.known_for_titles.add(movie_title)
+                        except MovieTitle.DoesNotExist:
+                            pass
+
+                except DataError as e:
+                    logger.info(e)
 
         except FileNotFoundError:
             print('File could not be found')
