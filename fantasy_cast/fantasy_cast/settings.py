@@ -7,11 +7,11 @@ except ImportError:
     pass
 
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 PROJECT_ROOT = os.path.dirname(os.path.dirname(
     os.path.dirname(os.path.abspath(__file__))))
-
-ALLOWED_HOSTS = []
+PROJECT_NAME = os.path.basename(PROJECT_ROOT)
+STATIC_ROOT = os.path.join(PROJECT_ROOT, 'static')
+MEDIA_ROOT = os.path.join(PROJECT_ROOT, 'media')
 
 
 # Application definition
