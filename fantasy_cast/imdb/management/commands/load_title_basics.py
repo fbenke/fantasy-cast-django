@@ -72,11 +72,11 @@ class Command(BaseCommand):
                     movie.title_type = title_type
                     movie.save()
 
-                    for g in entry[8].replace('\\N', '').split(','):
-                        genre, _ = Genre.objects.update_or_create(name=g)
-                        movie.genres.add(genre)
+                    if entry[8] != '\\N':
 
-                    raise DataError
+                        for g in entry[8].split(','):
+                            genre, _ = Genre.objects.update_or_create(name=g)
+                            movie.genres.add(genre)
 
                 except DataError as e:
                     logger.info(e)

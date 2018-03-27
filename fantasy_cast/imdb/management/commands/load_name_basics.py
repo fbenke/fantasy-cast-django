@@ -63,17 +63,21 @@ class Command(BaseCommand):
                         death_year=convert_int(entry[3])
                     )
 
-                    for p in entry[4].replace('\\N', '').split(','):
-                        profession, _ = Profession.objects.update_or_create(
-                            name=p)
-                        person.primary_profession.add(profession)
+                    if entry[4] != '\\N':
 
-                    for t in entry[5].replace('\\N', '').split(','):
-                        try:
-                            movie_title = MovieTitle.objects.get(tconst=t)
-                            person.known_for_titles.add(movie_title)
-                        except MovieTitle.DoesNotExist:
-                            pass
+                        for p in entry[4].split(','):
+                            profession, _ = Profession.objects.update_or_create(
+                                name=p)
+                            person.primary_profession.add(profession)
+
+                    if entry[5] != '\\N':
+
+                        for t in entry[5].split(','):
+                            try:
+                                movie_title = MovieTitle.objects.get(tconst=t)
+                                person.known_for_titles.add(movie_title)
+                            except MovieTitle.DoesNotExist:
+                                pass
 
                 except DataError as e:
                     logger.info(e)

@@ -44,3 +44,4 @@ psql_scripts/
 
 *.sqlite3
 import/
+nohup.out
