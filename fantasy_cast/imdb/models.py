@@ -19,7 +19,7 @@ class MovieTitle(models.Model):
 
     tconst = models.CharField(max_length=50, unique=True)
     title_type = models.ForeignKey(
-        TitleType, on_delete=models.CASCADE, null=True)
+        TitleType, on_delete=models.CASCADE)
     primary_title = models.CharField(max_length=150)
     original_title = models.CharField(max_length=150)
     is_adult = models.BooleanField(default=False)
@@ -52,3 +52,29 @@ class Person(models.Model):
 
     def __str__(self):
         return str(self.primary_name)
+
+
+class Category(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+
+    def __str__(self):
+        return str(self.name)
+
+
+class Principal(models.Model):
+    movie_title = models.ForeignKey(
+        MovieTitle, on_delete=models.CASCADE)
+    person = models.ForeignKey(
+        Profession, on_delete=models.CASCADE)
+    ordering = models.IntegerField()
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE)
+
+
+class Character(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    principal = models.ForeignKey(
+        Principal, on_delete=models.CASCADE, related_name='characters')
+
+    def __str__(self):
+        return str(self.name)

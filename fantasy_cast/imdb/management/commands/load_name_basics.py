@@ -76,8 +76,8 @@ class Command(BaseCommand):
                             try:
                                 movie_title = MovieTitle.objects.get(tconst=t)
                                 person.known_for_titles.add(movie_title)
-                            except MovieTitle.DoesNotExist:
-                                pass
+                            except MovieTitle.DoesNotExist as e:
+                                logger.info('%s: %s' % (e, t))
 
                 except DataError as e:
                     logger.info(e)

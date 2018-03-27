@@ -57,7 +57,7 @@ class Command(BaseCommand):
                 try:
                     entry = line.rstrip('\n').split('\t')
 
-                    movie = MovieTitle.objects.create(
+                    movie = MovieTitle(
                         tconst=entry[0],
                         primary_title=entry[2],
                         original_title=entry[3],
@@ -67,8 +67,8 @@ class Command(BaseCommand):
                         runtime_minutes=convert_int(entry[7])
                     )
 
-                    title_type, _ = TitleType.objects.update_or_create(name=entry[
-                                                                       1])
+                    title_type, _ = TitleType.objects.update_or_create(
+                        name=entry[1])
                     movie.title_type = title_type
                     movie.save()
 
@@ -79,7 +79,7 @@ class Command(BaseCommand):
                             movie.genres.add(genre)
 
                 except DataError as e:
-                    logger.info(e)
+                    logger.info('%s: %s' % (e, line))
 
         except FileNotFoundError:
             print('File could not be found')
