@@ -3,8 +3,10 @@ from imdb import models
 
 
 class MovieTitleAdmin(admin.ModelAdmin):
-    list_display = ('tconst', 'title_type', 'primary_title')
-
+    list_display = ('id', 'tconst', 'title_type',
+                    'primary_title', 'start_year')
+    search_fields = ['primary_title', 'original_title']
+    list_filter = ['is_adult', 'title_type']
 
 admin.site.register(models.MovieTitle, MovieTitleAdmin)
 admin.site.register(models.Genre, admin.ModelAdmin)
