@@ -80,7 +80,7 @@ class Command(BaseCommand):
                                 logger.info('%s: %s' % (e, t))
 
                 except DataError as e:
-                    logger.info(e)
+                    logger.info('%s: %s' % (e, line))
 
         except FileNotFoundError:
             print('File could not be found')
