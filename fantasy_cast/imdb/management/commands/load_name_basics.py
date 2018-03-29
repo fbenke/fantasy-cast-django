@@ -63,7 +63,7 @@ class Command(BaseCommand):
                         death_year=convert_int(entry[3])
                     )
 
-                    if entry[4] != '\\N':
+                    if entry[4] != '\\N' and entry[4] != '':
 
                         for p in entry[4].split(','):
                             profession, _ = Profession.objects.update_or_create(

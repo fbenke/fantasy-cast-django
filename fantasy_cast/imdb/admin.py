@@ -15,7 +15,8 @@ admin.site.register(models.TitleType, admin.ModelAdmin)
 
 class PersonAdmin(admin.ModelAdmin):
 
-    list_display = ('nconst', 'primary_name')
+    list_display = ('nconst', 'primary_name', 'birth_year', 'death_year')
+    search_fields = ['primary_name', ]
 
     def get_readonly_fields(self, request, obj=None):
         return list(self.readonly_fields) + ['known_for_titles', ]
