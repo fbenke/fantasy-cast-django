@@ -64,25 +64,20 @@ class Category(models.Model):
         return str(self.name)
 
     class Meta:
-        verbose_name = 'Pricipal Category'
-        verbose_name_plural = 'Pricipal Categories'
+        verbose_name = 'Principal Category'
+        verbose_name_plural = 'Principal Categories'
 
 
 class Principal(models.Model):
     movie_title = models.ForeignKey(
         MovieTitle, on_delete=models.CASCADE)
     person = models.ForeignKey(
-        Profession, on_delete=models.CASCADE)
+        Person, on_delete=models.CASCADE)
     ordering = models.IntegerField()
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE)
     job = models.CharField(max_length=150, default='')
-
-
-class Character(models.Model):
-    name = models.CharField(max_length=50, unique=True)
-    principal = models.ForeignKey(
-        Principal, on_delete=models.CASCADE, related_name='characters')
+    characters = models.CharField(max_length=150, default='')
 
     def __str__(self):
-        return str(self.name)
+        return str('%s - %s' % (self.movie_title, self.person))

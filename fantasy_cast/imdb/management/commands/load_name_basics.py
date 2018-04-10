@@ -50,7 +50,7 @@ class Command(BaseCommand):
 
             next(f)
 
-            for line in list(f):
+            for line in f:
 
                 try:
 

@@ -15,7 +15,7 @@ admin.site.register(models.TitleType, admin.ModelAdmin)
 
 class PersonAdmin(admin.ModelAdmin):
 
-    list_display = ('nconst', 'primary_name', 'birth_year', 'death_year')
+    list_display = ('id', 'nconst', 'primary_name', 'birth_year', 'death_year')
     search_fields = ['primary_name', ]
 
     def get_readonly_fields(self, request, obj=None):
@@ -26,7 +26,13 @@ admin.site.register(models.Person, PersonAdmin)
 admin.site.register(models.Profession, admin.ModelAdmin)
 
 
-admin.site.register(models.Principal, admin.ModelAdmin)
+class PrincipalAdmin(admin.ModelAdmin):
 
+    list_display = ('id', 'movie_title', 'person',
+                    'category', 'job', 'characters')
+
+    def get_readonly_fields(self, request, obj=None):
+        return list(self.readonly_fields) + ['movie_title', 'person']
+
+admin.site.register(models.Principal, PrincipalAdmin)
 admin.site.register(models.Category, admin.ModelAdmin)
-admin.site.register(models.Character, admin.ModelAdmin)
