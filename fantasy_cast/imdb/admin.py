@@ -4,7 +4,7 @@ from imdb import models
 
 class MovieTitleAdmin(admin.ModelAdmin):
     list_display = ('id', 'tconst', 'title_type',
-                    'primary_title', 'start_year')
+                    'primary_title', 'start_year', 'average_rating')
     search_fields = ['primary_title', 'original_title']
     list_filter = ['is_adult', 'title_type']
 
@@ -24,3 +24,9 @@ class PersonAdmin(admin.ModelAdmin):
 
 admin.site.register(models.Person, PersonAdmin)
 admin.site.register(models.Profession, admin.ModelAdmin)
+
+
+admin.site.register(models.Principal, admin.ModelAdmin)
+
+admin.site.register(models.Category, admin.ModelAdmin)
+admin.site.register(models.Character, admin.ModelAdmin)

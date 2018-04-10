@@ -6,7 +6,7 @@ from django.conf import settings
 from django.db import connections
 from django.db.utils import DataError
 
-from imdb.constants import TITLE_TYPE
+from imdb.constants import TITLE_TV_EPISODE
 from imdb.models import MovieTitle, Genre, TitleType
 from imdb.management.commands.converter_utils import convert_int, convert_boolean
 from imdb.management.commands.load_name_basics import reset_tables as reset_person_tables
@@ -59,7 +59,7 @@ class Command(BaseCommand):
                     entry = line.rstrip('\n').split('\t')
 
                     # Skip tv episodes for now
-                    if entry[1] == TITLE_TYPE:
+                    if entry[1] == TITLE_TV_EPISODE:
                         continue
 
                     movie = MovieTitle(

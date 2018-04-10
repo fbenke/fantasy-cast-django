@@ -27,6 +27,9 @@ class MovieTitle(models.Model):
     end_year = models.IntegerField(null=True)
     runtime_minutes = models.IntegerField(null=True)
     genres = models.ManyToManyField(Genre)
+    average_rating = models.DecimalField(
+        null=True, max_digits=3, decimal_places=1)
+    number_votes = models.IntegerField(null=True)
 
     class Meta:
         ordering = ['id']
@@ -60,6 +63,10 @@ class Category(models.Model):
     def __str__(self):
         return str(self.name)
 
+    class Meta:
+        verbose_name = 'Pricipal Category'
+        verbose_name_plural = 'Pricipal Categories'
+
 
 class Principal(models.Model):
     movie_title = models.ForeignKey(
@@ -69,6 +76,7 @@ class Principal(models.Model):
     ordering = models.IntegerField()
     category = models.ForeignKey(
         Category, on_delete=models.CASCADE)
+    job = models.CharField(max_length=150, default='')
 
 
 class Character(models.Model):

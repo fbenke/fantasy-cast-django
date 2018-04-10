@@ -73,11 +73,14 @@ class Command(BaseCommand):
                     if entry[5] != '\\N':
 
                         for t in entry[5].split(','):
+
                             try:
+
                                 movie_title = MovieTitle.objects.get(tconst=t)
                                 person.known_for_titles.add(movie_title)
+
                             except MovieTitle.DoesNotExist as e:
-                                logger.info('%s: %s' % (e, t))
+                                pass
 
                 except DataError as e:
                     logger.info('%s: %s' % (e, line))

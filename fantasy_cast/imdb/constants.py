@@ -1,1 +1,1 @@
-TITLE_TYPE = 'tvEpisode'
+TITLE_TV_EPISODE = 'tvEpisode'
