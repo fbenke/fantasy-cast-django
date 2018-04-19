@@ -1,9 +1,10 @@
 import tmdbsimple as tmdb
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-
 from django.conf import settings
+
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from tmdb.serializers import MovieSerializer
 from tmdb.models import Movie
@@ -12,6 +13,7 @@ tmdb.API_KEY = settings.TMDB_API_KEY
 
 
 class MovieSuggestions(APIView):
+    permission_classes = (IsAuthenticated,)
 
     def get(self, request, format=None):
 
