@@ -27,3 +27,13 @@ class Signin(ObtainAuthToken):
         user = serializer.validated_data.get('user')
         token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key, 'email': user.email, 'user_id': user.pk})
+
+
+class Signout(APIView):
+
+    def post(self, request):
+
+        if request.auth is not None:
+            request.auth.delete()
+
+        return Response()
