@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^api/imdb/', include('imdb.urls')),
     url(r'^api/tmdb/', include('tmdb.urls')),
     url(r'^api/remakes/', include('remake.urls')),
+    url(r'^api/account/', include('account.urls')),
     url(r'^docs/', include_docs_urls(title='Fantasy Cast'))
 ]

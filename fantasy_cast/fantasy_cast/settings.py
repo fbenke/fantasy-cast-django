@@ -28,7 +28,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'imdb',
     'tmdb',
-    'remake'
+    'remake',
+    'account'
 ]
 
 MIDDLEWARE = [
@@ -137,6 +138,8 @@ LOGGING = {
         },
     },
 }
+
+AUTH_USER_MODEL = 'account.CustomUser'
 
 try:
     CORS_ORIGIN_WHITELIST
