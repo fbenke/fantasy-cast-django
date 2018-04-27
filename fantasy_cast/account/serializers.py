@@ -40,22 +40,3 @@ class SignupSerializer(PasswordSerializer):
 
         return User.objects.create_user(email=validated_data.get('email'),
                                         password=validated_data.get('password1'))
-
-
-class AuthTokenSerializer(serializers.Serializer):
-
-    email = serializers.CharField(label='Email')
-    password = serializers.CharField(label='Password')
-
-    def validate(self, data):
-
-        user = authenticate(
-            username=data.get('email'),
-            password=data.get('password')
-        )
-
-        if user is not None:
-            data['user'] = user
-            return data
-        else:
-            raise serializers.ValidationError('Invalid username or password')
