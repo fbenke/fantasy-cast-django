@@ -1,20 +1,30 @@
+from collections import OrderedDict
+
+from rest_framework.exceptions import ParseError
+from rest_framework.generics import ListAPIView
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
 
 from imdb.models import MovieTitle
 from imdb.serializers import MovieSerializer
+from imdb.index import get_title_suggestions
 
 
-class MovieSuggestions(APIView):
+class MovieSuggestions(ListAPIView):
+
     permission_classes = (IsAuthenticated,)
+    serializer_class = MovieSerializer
 
-    def get(self, request, format=None):
+    def get_queryset(self):
 
-        query = request.query_params.get('query')
+        query = self.request.query_params.get('query')
+        if not query:
+            raise ParseError('Missing query parameter')
 
-        movies = MovieTitle.objects.filter(primary_title__iexact=query)
+        no_results = self.request.query_params.get('no_results', 10)
+        results = get_title_suggestions(query, no_results)
 
-        serializer = MovieSerializer(movies, many=True)
+        qs_sorted = list()
+        for v in results:
+            qs_sorted.append(MovieTitle.objects.get(tconst=v[0]))
 
-        return Response(serializer.data)
+        return qs_sorted
