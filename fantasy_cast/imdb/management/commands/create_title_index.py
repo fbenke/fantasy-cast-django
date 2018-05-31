@@ -6,7 +6,9 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.db import connections
 
+from imdb.constants import INDEX_TITLE_TYPES
 from imdb.index import SEARCH_INDEX, INDEX_TITLE
+from imdb.models import TitleType
 
 from elasticsearch import Elasticsearch, helpers
 es = Elasticsearch(getattr(settings, 'ELASTICSEARCH', [{'host': 'localhost'}]))
@@ -16,46 +18,50 @@ logger = logging.getLogger('django')
 
 def index_imdb_titles(index):
 
-    cursor = connections['default'].cursor()
+    with connections['default'].cursor() as cursor:
 
-    next_round = True
-    offset = 0
-    step_size = 80000
+        next_round = True
+        offset = 0
+        step_size = 80000
 
-    while next_round:
+        title_type_ids = [str(i) for i in TitleType.objects.filter(
+            name__in=INDEX_TITLE_TYPES).values_list('id', flat=True)]
 
-        logger.info('Next batch of title applications: %s' % offset)
+        while next_round:
 
-        query = '''
-            SELECT tconst, primary_title
-            FROM imdb_movietitle
-            WHERE start_year IS NOT NULL
-            ORDER BY id
-            LIMIT %s
-            OFFSET %s;
-        ''' % (step_size, offset)
+            logger.info('Next batch of title applications: %s' % offset)
 
-        cursor.execute(query)
-        rows = cursor.fetchall()
+            query = '''
+                SELECT tconst, primary_title
+                FROM imdb_movietitle m
+                JOIN imdb_titletype t on m.title_type_id = t.id
+                WHERE
+                    start_year IS NOT NULL AND
+                    t.id in (%s)
+                ORDER BY m.id
+                LIMIT %s
+                OFFSET %s;
+            ''' % (', '.join(title_type_ids), step_size, offset)
 
-        actions = [
-            {
-                '_index': index,
-                '_type': 'index',
-                '_source': {
-                    'id': row[0],
-                    'title': row[1]
+            cursor.execute(query)
+            rows = cursor.fetchall()
+
+            actions = [
+                {
+                    '_index': index,
+                    '_type': 'index',
+                    '_source': {
+                        'id': row[0],
+                        'title': row[1]
+                    }
                 }
-            }
-            for row in rows
-        ]
+                for row in rows
+            ]
 
-        helpers.bulk(es, actions)
+            helpers.bulk(es, actions)
 
-        next_round = cursor.rowcount > 0
-        offset += step_size
-
-    cursor.close()
+            next_round = cursor.rowcount > 0
+            offset += step_size
 
 
 class Command(BaseCommand):

@@ -10,7 +10,12 @@ class MovieTitleAdmin(admin.ModelAdmin):
 
 admin.site.register(models.MovieTitle, MovieTitleAdmin)
 admin.site.register(models.Genre, admin.ModelAdmin)
-admin.site.register(models.TitleType, admin.ModelAdmin)
+
+
+class TitleTypeAdmin(admin.ModelAdmin):
+    list_display = ('id', 'name')
+
+admin.site.register(models.TitleType, TitleTypeAdmin)
 
 
 class PersonAdmin(admin.ModelAdmin):

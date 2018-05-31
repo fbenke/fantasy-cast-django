@@ -20,8 +20,8 @@ class MovieSuggestions(ListAPIView):
         if not query:
             raise ParseError('Missing query parameter')
 
-        no_results = self.request.query_params.get('no_results', 10)
-        results = get_title_suggestions(query, no_results)
+        limit = self.request.query_params.get('limit', 10)
+        results = get_title_suggestions(query, limit)
 
         qs_sorted = list()
         for v in results:
