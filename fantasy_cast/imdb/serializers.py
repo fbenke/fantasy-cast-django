@@ -1,4 +1,6 @@
 from rest_framework import serializers
+
+from imdb.constants import INDEX_TITLE_LABELS
 from imdb.models import MovieTitle
 
 
@@ -10,5 +12,5 @@ class MovieSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        ret['title_type'] = instance.title_type.name
+        ret['title_type'] = INDEX_TITLE_LABELS[instance.title_type.name]
         return ret
