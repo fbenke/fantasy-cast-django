@@ -7,3 +7,11 @@ class RemakeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Remake
         fields = '__all__'
+
+
+class RemakeNestedSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Remake
+        fields = '__all__'
+        depth = 1
