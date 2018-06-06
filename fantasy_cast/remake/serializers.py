@@ -6,7 +6,7 @@ class RemakeSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Remake
-        fields = '__all__'
+        exclude = ('user',)
 
 
 class RemakeNestedSerializer(serializers.ModelSerializer):

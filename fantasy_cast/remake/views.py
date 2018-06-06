@@ -10,6 +10,9 @@ class RemakeList(generics.ListCreateAPIView):
     queryset = Remake.objects.all()
     serializer_class = RemakeSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 class RemakeDetail(generics.RetrieveDestroyAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)

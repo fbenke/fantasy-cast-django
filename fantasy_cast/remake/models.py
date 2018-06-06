@@ -1,4 +1,7 @@
 from django.db import models
+
+from account.models import CustomUser
+
 from imdb.models import MovieTitle
 
 
@@ -8,6 +11,7 @@ class Remake(models.Model):
     description = models.TextField()
     movie = models.ForeignKey(
         MovieTitle, on_delete=models.CASCADE)
+    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     class Meta:
         ordering = ['id']
