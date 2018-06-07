@@ -5,3 +5,4 @@ INDEX_TITLE_LABELS = {
     'movie': 'Movie',
     'tvSeries': 'TV Series'
 }
+PRINCIPAL_CATEGORY_ACTOR = ['actor', 'actress']

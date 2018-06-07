@@ -40,4 +40,4 @@ class PrincipalAdmin(admin.ModelAdmin):
         return list(self.readonly_fields) + ['movie_title', 'person']
 
 admin.site.register(models.Principal, PrincipalAdmin)
-admin.site.register(models.Category, admin.ModelAdmin)
+admin.site.register(models.Category, TitleTypeAdmin)
