@@ -1,8 +1,11 @@
 TITLE_TV_EPISODE = 'tvEpisode'
-INDEX_TITLE_TYPES = ['short', 'movie', 'tvSeries']
+TITLE_TYPE_MOVIE = 'movie'
+TITLE_TYPE_SERIES = 'tvSeries'
+TITLE_TYPE_SHORT = 'short'
+INDEX_TITLE_TYPES = [TITLE_TYPE_SHORT, TITLE_TYPE_SERIES, TITLE_TYPE_SERIES]
 INDEX_TITLE_LABELS = {
-    'short': 'Short Film',
-    'movie': 'Movie',
-    'tvSeries': 'TV Series'
+    TITLE_TYPE_SHORT: 'Short Film',
+    TITLE_TYPE_MOVIE: 'Movie',
+    TITLE_TYPE_SERIES: 'TV Series'
 }
 PRINCIPAL_CATEGORY_ACTOR = ['actor', 'actress']
