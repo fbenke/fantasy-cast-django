@@ -77,18 +77,17 @@ class GetMovie(APIView):
             elif imdb_movie.title_type.name == TITLE_TYPE_SERIES:
                 results = response[c.API_RESPONSE_TV_SERIES_RESULTS]
             else:
-                return Response()
+                return Response({})
 
             if len(results) > 1:
                 logger.info('More than one result for imdb id %s (%s)' %
                             (imdb_id, response))
 
             elif len(results) == 1:
-
                 serializer = MovieSerializer(get_movie(results[0]))
                 return Response(serializer.data)
 
-            return Response()
+            return Response({})
 
         except ImdbMovie.DoesNotExist:
             raise ParseError('Invalid imdb id')

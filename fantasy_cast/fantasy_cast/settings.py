@@ -157,5 +157,11 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': '5/second',
         'user': '5/second'
-    }
+    },
+    'DEFAULT_PARSER_CLASSES': (
+        'fantasy_cast.parsers.CamelCaseJSONParser',
+    ),
+    'DEFAULT_RENDERER_CLASSES': (
+        'fantasy_cast.renderers.CamelCaseJSONRenderer',
+    )
 }
