@@ -46,3 +46,10 @@ class PrincipalSuggestions(ListAPIView):
         return Principal.objects.filter(
             movie_title_id=movie_id,
             category__name__in=PRINCIPAL_CATEGORY_ACTOR)
+
+
+def get_cast(imdb_id):
+
+    return Principal.objects.filter(
+        movie_title_id=imdb_id,
+        category__name__in=PRINCIPAL_CATEGORY_ACTOR)
