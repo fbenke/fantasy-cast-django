@@ -11,6 +11,7 @@ class Remake(models.Model):
     description = models.TextField()
     movie = models.ForeignKey(
         MovieTitle, on_delete=models.CASCADE)
+    tmdb_id = models.IntegerField(null=True, blank=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
 
     class Meta:
@@ -22,7 +23,11 @@ class Remake(models.Model):
 
 class Character(models.Model):
 
-    name = models.CharField(max_length=50)
+    character = models.CharField(max_length=150)
+    actor_name = models.CharField(max_length=150)
+    tmdb_profile_path = models.CharField(
+        max_length=150, default='', blank=True)
+    remake = models.ForeignKey(Remake, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.name)
+        return str(self.character)

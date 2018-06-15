@@ -22,21 +22,22 @@ logger = logging.getLogger('django')
 
 def get_movie(r):
 
-    return Movie(tmdb_id=r.get('id'),
-                 title=r.get('title'),
-                 release_date=r.get('release_date'),
-                 popularity=r.get('popularity'),
-                 overview=r.get('overview'),
-                 original_title=r.get('original_title'),
-                 original_language=r.get('original_language'),
-                 vote_count=r.get('vote_count'),
-                 vote_average=r.get('vote_average'),
-                 backdrop_path=r.get('backdrop_path'),
-                 poster_path=r.get('poster_path'),
-                 genres=r.get('genre_ids'),
-                 is_adult=r.get('adult'),
-                 is_video=r.get('video')
-                 )
+    return Movie(
+        tmdb_id=r.get('id'),
+        title=r.get('title'),
+        release_date=r.get('release_date'),
+        popularity=r.get('popularity'),
+        overview=r.get('overview'),
+        original_title=r.get('original_title'),
+        original_language=r.get('original_language'),
+        vote_count=r.get('vote_count'),
+        vote_average=r.get('vote_average'),
+        backdrop_path=r.get('backdrop_path'),
+        poster_path=r.get('poster_path'),
+        genres=r.get('genre_ids'),
+        is_adult=r.get('adult'),
+        is_video=r.get('video')
+    )
 
 
 class MovieSuggestions(APIView):
@@ -91,3 +92,9 @@ class GetMovie(APIView):
 
         except ImdbMovie.DoesNotExist:
             raise ParseError('Invalid imdb id')
+
+
+def get_cast(tmdb_id):
+
+    movies = tmdb.Movies(id=tmdb_id)
+    return movies.credits().get(c.API_RESPONSE_CAST)
