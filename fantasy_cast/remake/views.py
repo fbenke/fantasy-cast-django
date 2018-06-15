@@ -46,7 +46,7 @@ class GetCharacterSuggestions(APIView):
                     m.Character(
                         character=c.get('character'),
                         actor_name=c.get('name'),
-                        tmdb_profile_path=c.get('profile_path'),
+                        tmdb_profile_path=c.get('profile_path') or '',
                         tmdb_id=c.get('id')
                     )
                 )
@@ -62,5 +62,6 @@ class GetCharacterSuggestions(APIView):
                         imdb_principal=c
                     )
                 )
+
         serializer = s.CharacterSerializer(characters, many=True)
         return Response(serializer.data)
