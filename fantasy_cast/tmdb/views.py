@@ -94,7 +94,11 @@ class GetMovie(APIView):
             raise ParseError('Invalid imdb id')
 
 
-def get_cast(tmdb_id):
-
-    movies = tmdb.Movies(id=tmdb_id)
-    return movies.credits().get(c.API_RESPONSE_CAST)
+def get_cast(tmdb_id, imdb_id):
+    imdb_movie = ImdbMovie.objects.get(id=imdb_id)
+    if imdb_movie.title_type.name == TITLE_TYPE_SERIES:
+        tv = tmdb.TV(id=tmdb_id)
+        return tv.credits().get(c.API_RESPONSE_CAST)
+    elif imdb_movie.title_type.name in [TITLE_TYPE_MOVIE, TITLE_TYPE_SHORT]:
+        movies = tmdb.Movies(id=tmdb_id)
+        return movies.credits().get(c.API_RESPONSE_CAST)

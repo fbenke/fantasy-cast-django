@@ -41,7 +41,7 @@ class GetCharacterSuggestions(APIView):
         characters = []
 
         if tmdb_id:
-            for c in get_tmdb_cast(tmdb_id):
+            for c in get_tmdb_cast(tmdb_id, imdb_id):
                 characters.append(
                     m.Character(
                         character=c.get('character'),
@@ -52,7 +52,6 @@ class GetCharacterSuggestions(APIView):
                 )
 
         if not characters:
-
             for c in get_imdb_cast(imdb_id):
                 characters.append(
                     m.Character(
@@ -62,6 +61,5 @@ class GetCharacterSuggestions(APIView):
                         imdb_principal=c
                     )
                 )
-
         serializer = s.CharacterSerializer(characters, many=True)
         return Response(serializer.data)
