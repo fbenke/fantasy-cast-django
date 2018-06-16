@@ -13,6 +13,7 @@ class Remake(models.Model):
         MovieTitle, on_delete=models.CASCADE)
     tmdb_id = models.IntegerField(null=True, blank=True)
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+    is_open = models.BooleanField(default=True)
 
     class Meta:
         ordering = ['id']

@@ -2,6 +2,14 @@ from rest_framework.serializers import ModelSerializer, ValidationError
 from remake import models
 
 
+class RemakeListSerializer(ModelSerializer):
+
+    class Meta:
+        model = models.Remake
+        fields = ('id', 'title', 'movie')
+        depth = 1
+
+
 class RemakeNestedSerializer(ModelSerializer):
 
     class Meta:
@@ -23,15 +31,13 @@ class CharacterSerializer(ModelSerializer):
         return ret
 
 
-class RemakeSerializer(ModelSerializer):
+class CreateRemakeSerializer(ModelSerializer):
 
     characters = CharacterSerializer(many=True)
 
     class Meta:
         model = models.Remake
-        fields = '__all__'
-        read_only_fields = ('user',)
-        extra_kwargs = {'characters': {'write_only': True}}
+        exclude = ('user',)
 
     def create(self, validated_data):
         characters_data = validated_data.pop('characters')

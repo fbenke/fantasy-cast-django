@@ -14,13 +14,17 @@ from tmdb.views import get_cast as get_tmdb_cast
 from imdb.views import get_cast as get_imdb_cast
 
 
-class RemakeList(generics.ListCreateAPIView):
-    permission_classes = (IsAuthenticatedOrReadOnly,)
-    queryset = m.Remake.objects.all()
-    serializer_class = s.RemakeSerializer
+class CreateRemake(generics.CreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = s.CreateRemakeSerializer
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+
+
+class RemakeList(generics.ListAPIView):
+    queryset = m.Remake.objects.filter(is_open=True)
+    serializer_class = s.RemakeListSerializer
 
 
 class RemakeDetail(generics.RetrieveDestroyAPIView):
