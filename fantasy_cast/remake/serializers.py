@@ -29,7 +29,9 @@ class RemakeSerializer(ModelSerializer):
 
     class Meta:
         model = models.Remake
-        exclude = ('user',)
+        fields = '__all__'
+        read_only_fields = ('user',)
+        extra_kwargs = {'characters': {'write_only': True}}
 
     def create(self, validated_data):
         characters_data = validated_data.pop('characters')

@@ -1,3 +1,5 @@
+from django.core.exceptions import ValidationError
+
 from rest_framework.exceptions import ParseError
 from rest_framework import generics
 from rest_framework.permissions import (
@@ -42,25 +44,35 @@ class GetCharacterSuggestions(APIView):
 
         if tmdb_id:
             for c in get_tmdb_cast(tmdb_id, imdb_id):
-                characters.append(
-                    m.Character(
-                        character=c.get('character'),
-                        actor_name=c.get('name'),
-                        tmdb_profile_path=c.get('profile_path') or '',
-                        tmdb_id=c.get('id')
-                    )
+                character = m.Character(
+                    character=c.get('character'),
+                    actor_name=c.get('name'),
+                    tmdb_profile_path=c.get('profile_path') or '',
+                    tmdb_id=c.get('id')
                 )
+
+                try:
+                    character.clean_fields(exclude=('remake'))
+                    characters.append(character)
+                except ValidationError:
+                    pass
 
         if not characters:
             for c in get_imdb_cast(imdb_id):
-                characters.append(
-                    m.Character(
-                        character=c.characters.replace(
-                            '\"', '').replace('[', '').replace(']', ''),
-                        actor_name=c.person.primary_name,
-                        imdb_principal=c
-                    )
+
+                character = m.Character(
+                    character=c.characters.replace(
+                        '\"', '').replace('[', '').replace(']', ''),
+                    actor_name=c.person.primary_name,
+                    imdb_principal=c
                 )
+
+                try:
+                    character.clean_fields(exclude=('remake'))
+                    characters.append(character)
+                except ValidationError as e:
+                    print(e)
+                    pass
 
         serializer = s.CharacterSerializer(characters, many=True)
         return Response(serializer.data)
