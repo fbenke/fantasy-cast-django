@@ -61,5 +61,6 @@ class GetCharacterSuggestions(APIView):
                         imdb_principal=c
                     )
                 )
+
         serializer = s.CharacterSerializer(characters, many=True)
         return Response(serializer.data)

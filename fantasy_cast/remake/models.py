@@ -27,7 +27,8 @@ class Character(models.Model):
     actor_name = models.CharField(max_length=150)
     tmdb_profile_path = models.CharField(
         max_length=150, default='', blank=True)
-    remake = models.ForeignKey(Remake, on_delete=models.CASCADE)
+    remake = models.ForeignKey(
+        Remake, on_delete=models.CASCADE, related_name='characters')
     tmdb_id = models.IntegerField(null=True, blank=True)
     imdb_principal = models.ForeignKey(
         Principal, null=True, blank=True, on_delete=models.CASCADE)
