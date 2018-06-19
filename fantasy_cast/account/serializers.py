@@ -28,15 +28,26 @@ class PasswordSerializer(serializers.Serializer):
 class SignupSerializer(PasswordSerializer):
 
     email = fields.EmailField(label='Email')
+    username = fields.CharField(label='Username')
+
+    def validate_username(self, value):
+        'Validate that the username is unique.'
+
+        if User.objects.filter(username__iexact=value):
+            raise serializers.ValidationError('Username is already in use')
+        return value
 
     def validate_email(self, value):
         'Validate that the e-mail address is unique.'
 
         if User.objects.filter(email__iexact=value):
-            raise serializers.ValidationError('Email is already use')
+            raise serializers.ValidationError('Email is already in use')
         return value
 
     def create(self, validated_data):
 
-        return User.objects.create_user(email=validated_data.get('email'),
-                                        password=validated_data.get('password1'))
+        return User.objects.create_user(
+            email=validated_data.get('email'),
+            password=validated_data.get('password1'),
+            username=validated_data.get('username')
+        )

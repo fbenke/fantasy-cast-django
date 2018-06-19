@@ -27,6 +27,7 @@ class UserCreationForm(forms.ModelForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.set_username()
         user.set_password(self.cleaned_data['password1'])
         if commit:
             user.save()
@@ -37,10 +38,10 @@ class UserAdmin(BaseUserAdmin):
 
     add_form = UserCreationForm
 
-    list_display = ('email', 'is_admin')
+    list_display = ('email', 'is_admin', 'username')
     list_filter = ('is_admin',)
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password', 'username')}),
         ('Permissions', {'fields': ('is_admin',)}),
     )
     add_fieldsets = (

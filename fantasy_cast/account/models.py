@@ -1,15 +1,18 @@
+import random
+from hashlib import sha1
+
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
 from django.db import models
 
 
 class CustomUserManager(BaseUserManager):
 
-    def create_user(self, email, password):
+    def create_user(self, email, password, username=None):
         if not email or not password:
             raise ValueError('Users must have an email address and password')
 
         user = self.model(email=self.normalize_email(email))
-
+        user.set_username(username)
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -34,10 +37,26 @@ class CustomUser(AbstractBaseUser):
 
     is_active = models.BooleanField(default=True)
     is_admin = models.BooleanField(default=False)
+    username = models.CharField(max_length=150, unique=True)
 
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
+
+    def set_username(self, username=None):
+
+        if username:
+            self.username = username
+            return
+
+        while True:
+            username = sha1(str(random.random()).encode(
+                'utf-8')).hexdigest()[:5]
+            try:
+                CustomUser.objects.get(username__iexact=username)
+            except CustomUser.DoesNotExist:
+                self.username = username
+                break
 
     def __str__(self):
         return self.email
