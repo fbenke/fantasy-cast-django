@@ -1,12 +1,16 @@
 from rest_framework.serializers import ModelSerializer, ValidationError
 from remake import models
 
+from account.serializers import UserSerializer
+
 
 class RemakeListSerializer(ModelSerializer):
 
+    user = UserSerializer()
+
     class Meta:
         model = models.Remake
-        fields = ('id', 'title', 'movie')
+        fields = ('id', 'title', 'movie', 'user')
         depth = 1
 
 
