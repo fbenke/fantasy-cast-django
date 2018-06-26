@@ -140,6 +140,7 @@ LOGGING = {
 }
 
 AUTH_USER_MODEL = 'account.CustomUser'
+AUTHENTICATION_BACKENDS = ['account.models.EmailOrUsernameModelBackend']
 
 try:
     CORS_ORIGIN_WHITELIST

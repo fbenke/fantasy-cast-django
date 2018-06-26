@@ -26,7 +26,10 @@ class Signin(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data.get('user')
         token, created = Token.objects.get_or_create(user=user)
-        return Response({'token': token.key, 'email': user.email, 'user_id': user.pk})
+        return Response(
+            {'token': token.key, 'email': user.email,
+             'user_id': user.pk, 'username': user.username}
+        )
 
 
 class Signout(APIView):
