@@ -70,7 +70,6 @@ class GetMovie(APIView):
         try:
             imdb_movie = ImdbMovie.objects.get(id=imdb_id)
             find = tmdb.Find(id=imdb_movie.tconst)
-
             response = find.info(external_source=c.API_PARAM_EXTERNAL_SOURCES)
 
             if imdb_movie.title_type.name in [TITLE_TYPE_MOVIE, TITLE_TYPE_SHORT]:

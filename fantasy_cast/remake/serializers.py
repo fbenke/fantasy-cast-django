@@ -2,23 +2,16 @@ from rest_framework.serializers import ModelSerializer, ValidationError
 from remake import models
 
 from account.serializers import UserSerializer
+from imdb.serializers import MovieSerializer
 
 
 class RemakeListSerializer(ModelSerializer):
-
+    movie = MovieSerializer()
     user = UserSerializer()
 
     class Meta:
         model = models.Remake
         fields = ('id', 'title', 'movie', 'user')
-        depth = 1
-
-
-class RemakeNestedSerializer(ModelSerializer):
-
-    class Meta:
-        model = models.Remake
-        fields = '__all__'
         depth = 1
 
 
@@ -54,3 +47,14 @@ class CreateRemakeSerializer(ModelSerializer):
         if len(data.get('characters')) < 1:
             raise ValidationError('must specify at least one character')
         return data
+
+
+class RemakeDetailSerializer(ModelSerializer):
+    movie = MovieSerializer()
+    user = UserSerializer()
+    characters = CharacterSerializer(many=True)
+
+    class Meta:
+        model = models.Remake
+        fields = '__all__'
+        depth = 1

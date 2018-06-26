@@ -30,7 +30,7 @@ class RemakeList(generics.ListAPIView):
 class RemakeDetail(generics.RetrieveDestroyAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
     queryset = m.Remake.objects.all()
-    serializer_class = s.RemakeNestedSerializer
+    serializer_class = s.RemakeDetailSerializer
 
 
 class GetCharacterSuggestions(APIView):
