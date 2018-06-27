@@ -5,6 +5,7 @@ from rest_framework import generics
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly, IsAuthenticated)
 from rest_framework.response import Response
+from rest_framework.status import HTTP_405_METHOD_NOT_ALLOWED
 from rest_framework.views import APIView
 
 from remake import models as m
@@ -31,6 +32,11 @@ class RemakeDetail(generics.RetrieveDestroyAPIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
     queryset = m.Remake.objects.all()
     serializer_class = s.RemakeDetailSerializer
+
+    def delete(self, request, *args, **kwargs):
+        if self.get_object().user != request.user:
+            return Response(status=HTTP_405_METHOD_NOT_ALLOWED)
+        return self.destroy(request, *args, **kwargs)
 
 
 class GetCharacterSuggestions(APIView):
