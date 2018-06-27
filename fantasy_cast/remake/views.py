@@ -52,7 +52,8 @@ class GetCharacterSuggestions(APIView):
                     character=c.get('character'),
                     actor_name=c.get('name'),
                     tmdb_profile_path=c.get('profile_path') or '',
-                    tmdb_id=c.get('id')
+                    tmdb_id=c.get('id'),
+                    order=c.get('order')
                 )
 
                 try:
@@ -62,20 +63,22 @@ class GetCharacterSuggestions(APIView):
                     pass
 
         if not characters:
+            order = 0
             for c in get_imdb_cast(imdb_id):
 
                 character = m.Character(
                     character=c.characters.replace(
                         '\"', '').replace('[', '').replace(']', ''),
                     actor_name=c.person.primary_name,
-                    imdb_principal=c
+                    imdb_principal=c,
+                    order=order
                 )
 
                 try:
                     character.clean_fields(exclude=('remake'))
                     characters.append(character)
-                except ValidationError as e:
-                    print(e)
+                    order += 1
+                except ValidationError:
                     pass
 
         serializer = s.CharacterSerializer(characters, many=True)

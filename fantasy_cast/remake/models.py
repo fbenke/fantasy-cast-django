@@ -33,6 +33,7 @@ class Character(models.Model):
     tmdb_id = models.IntegerField(null=True, blank=True)
     imdb_principal = models.ForeignKey(
         Principal, null=True, blank=True, on_delete=models.CASCADE)
+    order = models.IntegerField()
 
     def __str__(self):
         return str(self.character)

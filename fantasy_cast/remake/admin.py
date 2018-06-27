@@ -25,7 +25,7 @@ admin.site.register(models.Remake, RemakeAdmin)
 
 
 class CharacterAdmin(admin.ModelAdmin):
-    list_display = ('id', 'character', 'actor_name',
+    list_display = ('id', 'order', 'character', 'actor_name',
                     'tmdb_id', 'imdb_principal')
 
     def get_readonly_fields(self, request, obj=None):
