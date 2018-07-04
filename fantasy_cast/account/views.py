@@ -1,10 +1,11 @@
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from account.serializers import SignupSerializer
+from account.serializers import SignupSerializer, UserDetailSerializer
 
 
 class Signup(APIView):
@@ -26,10 +27,7 @@ class Signin(ObtainAuthToken):
         serializer.is_valid(raise_exception=True)
         user = serializer.validated_data.get('user')
         token, created = Token.objects.get_or_create(user=user)
-        return Response(
-            {'token': token.key, 'email': user.email,
-             'user_id': user.pk, 'username': user.username}
-        )
+        return Response({'token': token.key})
 
 
 class Signout(APIView):
@@ -38,5 +36,12 @@ class Signout(APIView):
 
         if request.auth is not None:
             request.auth.delete()
-
         return Response()
+
+
+class GetUserDetails(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        serializer = UserDetailSerializer(request.user)
+        return Response(serializer.data)

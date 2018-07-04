@@ -60,3 +60,11 @@ class UserSerializer(ModelSerializer):
         model = User
         fields = ('username',)
         depth = 1
+
+
+class UserDetailSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'id')
+        depth = 1
