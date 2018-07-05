@@ -39,6 +39,20 @@ class RemakeDetail(generics.RetrieveDestroyAPIView):
         return self.destroy(request, *args, **kwargs)
 
 
+class CloseRemake(APIView):
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
+    def get(self, request, pk, format=None):
+        try:
+            remake = m.Remake.objects.get(
+                is_open=True, user=request.user, id=pk)
+            remake.is_open = False
+            remake.save()
+            return Response()
+        except m.Remake.DoesNotExist as e:
+            raise ValidationError(e)
+
+
 class GetCharacterSuggestions(APIView):
     permission_classes = (IsAuthenticated,)
 

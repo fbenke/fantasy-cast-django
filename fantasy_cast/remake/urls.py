@@ -5,5 +5,6 @@ urlpatterns = [
     url(r'^$', views.RemakeList.as_view()),
     url(r'^add/$', views.CreateRemake.as_view()),
     url(r'^(?P<pk>[0-9]+)$', views.RemakeDetail.as_view()),
-    url(r'^characters/$', views.GetCharacterSuggestions.as_view())
+    url(r'^characters/$', views.GetCharacterSuggestions.as_view()),
+    url(r'^close/(?P<pk>[0-9]+)$', views.CloseRemake.as_view())
 ]
