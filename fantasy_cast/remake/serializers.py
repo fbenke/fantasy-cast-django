@@ -11,7 +11,7 @@ class RemakeListSerializer(ModelSerializer):
 
     class Meta:
         model = models.Remake
-        fields = ('id', 'title', 'movie', 'user')
+        fields = ('id', 'title', 'movie', 'user', 'is_open')
         depth = 1
 
 

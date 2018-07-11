@@ -24,7 +24,7 @@ class CreateRemake(generics.CreateAPIView):
 
 
 class RemakeList(generics.ListAPIView):
-    queryset = m.Remake.objects.filter(is_open=True)
+    queryset = m.Remake.objects.filter()
     serializer_class = s.RemakeListSerializer
 
 
