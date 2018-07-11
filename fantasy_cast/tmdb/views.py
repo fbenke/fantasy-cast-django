@@ -8,13 +8,14 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from imdb.constants import TITLE_TYPE_MOVIE, TITLE_TYPE_SERIES, TITLE_TYPE_SHORT
+from imdb.models import MovieTitle as ImdbMovie
+
 from tmdb import constants as c
 from tmdb.serializers import MovieSerializer
 from tmdb.models import Movie
 
-
-from imdb.constants import TITLE_TYPE_MOVIE, TITLE_TYPE_SERIES, TITLE_TYPE_SHORT
-from imdb.models import MovieTitle as ImdbMovie
+from remake.models import Remake
 
 tmdb.API_KEY = settings.TMDB_API_KEY
 logger = logging.getLogger('django')
@@ -63,34 +64,59 @@ class MovieSuggestions(APIView):
         return Response(serializer.data)
 
 
-class GetMovie(APIView):
+def get_tmdb_info(imdb_movie):
+
+    find = tmdb.Find(id=imdb_movie.tconst)
+    response = find.info(external_source=c.API_PARAM_EXTERNAL_SOURCES)
+
+    results = []
+
+    if imdb_movie.title_type.name in [TITLE_TYPE_MOVIE, TITLE_TYPE_SHORT]:
+        results = response[c.API_RESPONSE_MOVIE_RESULTS]
+    elif imdb_movie.title_type.name == TITLE_TYPE_SERIES:
+        results = response[c.API_RESPONSE_TV_SERIES_RESULTS]
+
+    if len(results) > 1:
+        logger.info('More than one result for imdb id %s (%s)' %
+                    (imdb_movie.id, response))
+        return None
+    elif len(results) == 0:
+        return None
+
+    return results[0]
+
+
+class GetMovieForImdbId(APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, imdb_id, format=None):
         try:
             imdb_movie = ImdbMovie.objects.get(id=imdb_id)
-            find = tmdb.Find(id=imdb_movie.tconst)
-            response = find.info(external_source=c.API_PARAM_EXTERNAL_SOURCES)
-
-            if imdb_movie.title_type.name in [TITLE_TYPE_MOVIE, TITLE_TYPE_SHORT]:
-                results = response[c.API_RESPONSE_MOVIE_RESULTS]
-            elif imdb_movie.title_type.name == TITLE_TYPE_SERIES:
-                results = response[c.API_RESPONSE_TV_SERIES_RESULTS]
-            else:
-                return Response({})
-
-            if len(results) > 1:
-                logger.info('More than one result for imdb id %s (%s)' %
-                            (imdb_id, response))
-
-            elif len(results) == 1:
-                serializer = MovieSerializer(get_movie(results[0]))
+            tmdb_info = get_tmdb_info(imdb_movie)
+            if tmdb_info:
+                serializer = MovieSerializer(get_movie(tmdb_info))
                 return Response(serializer.data)
 
             return Response({})
 
         except ImdbMovie.DoesNotExist:
             raise ParseError('Invalid imdb id')
+
+
+class GetMovieForRemake(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, pk, format=None):
+        try:
+            remake = Remake.objects.get(id=pk)
+            tmdb_info = get_tmdb_info(remake.movie)
+            if tmdb_info:
+                serializer = MovieSerializer(get_movie(tmdb_info))
+                return Response(serializer.data)
+
+            return Response({})
+        except Remake.DoesNotExist:
+            raise ParseError('Invalid remake id')
 
 
 def get_cast(tmdb_id, imdb_id):

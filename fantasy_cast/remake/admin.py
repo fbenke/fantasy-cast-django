@@ -12,7 +12,7 @@ class CharacterInline(admin.TabularInline):
 
 
 class RemakeAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'description', 'movie', 'user')
+    list_display = ('id', 'title', 'description', 'movie', 'user', 'is_open')
 
     def get_readonly_fields(self, request, obj=None):
         return list(self.readonly_fields) + ['user', 'movie']
