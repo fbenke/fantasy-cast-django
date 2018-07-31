@@ -9,10 +9,10 @@ from account.models import CustomUser as User
 
 class PasswordSerializer(Serializer):
 
-    password1 = fields.CharField(label='Password')
-    password2 = fields.CharField(label='Password confirmation')
+    password = fields.CharField(label='Password')
+    password_repeat = fields.CharField(label='Password confirmation')
 
-    def validate_password1(self, value):
+    def validate_password(self, value):
         'Wrap Django password validation.'
         try:
             password_validation.validate_password(value)
@@ -21,7 +21,7 @@ class PasswordSerializer(Serializer):
             raise ValidationError(e.messages)
 
     def validate(self, data):
-        if data.get('password1') != data.get('password2'):
+        if data.get('password') != data.get('password_repeat'):
             raise ValidationError('Passwords do not match')
         return data
 
